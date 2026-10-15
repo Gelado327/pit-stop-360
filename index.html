@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pit Stop 360 | Automobilismo</title>
+  <style>
+/* =================================
+   PIT STOP 360 — ESTILO PRINCIPAL
+================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: #0b0b0d; color: #f5f5f5; font-family: Arial, Helvetica, sans-serif; line-height: 1.6; }
+a { color: inherit; text-decoration: none; }
+header { display: flex; justify-content: space-between; align-items: center; gap: 25px; padding: 22px 7%; background: #111114; border-bottom: 2px solid #e10600; position: sticky; top: 0; z-index: 10; }
+.logo { font-size: 24px; font-weight: 900; letter-spacing: 1px; white-space: nowrap; }
+.logo span { color: #e10600; }
+nav { display: flex; gap: 22px; flex-wrap: wrap; }
+nav a { color: #cccccc; font-size: 14px; font-weight: bold; transition: color 0.2s; }
+nav a:hover { color: #e10600; }
+.destaque { min-height: 520px; padding: 100px 10%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; background: radial-gradient(ellipse at 85% 40%, #421010 0%, transparent 45%), linear-gradient(120deg, #111114, #1a0909); border-bottom: 1px solid #292929; }
+.etiqueta { color: #ff302a; font-size: 12px; font-weight: 900; letter-spacing: 3px; margin-bottom: 12px; }
+.destaque h1 { font-size: clamp(44px, 7vw, 76px); line-height: 1.05; margin-bottom: 20px; font-weight: 900; text-transform: uppercase; }
+.destaque h1 span { color: #e10600; }
+.destaque > p:not(.etiqueta) { color: #c4c4c4; max-width: 450px; margin-bottom: 28px; }
+.botao { display: inline-block; background: #e10600; color: #ffffff; padding: 13px 24px; margin: 8px 0 22px; font-size: 13px; font-weight: 900; letter-spacing: 1px; border-radius: 3px; transition: background 0.2s, transform 0.2s; }
+.botao:hover { background: #ff302a; transform: translateY(-2px); }
+.secao { padding: 75px 8%; border-bottom: 1px solid #252529; scroll-margin-top: 100px; }
+.secao h2 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 10px; }
+.secao > p:not(.etiqueta) { color: #aaaaaf; margin-bottom: 25px; }
+.subtitulo-calendario { font-size: 25px; margin-top: 40px; margin-bottom: 10px; padding-left: 14px; border-left: 4px solid #e10600; }
+#lista-noticias, #calendario-f1, #calendario-f2, #calendario-f3, #calendario-f1academy, #lista-calendario, #classificacao, #lista-aprender, #classificacao-construtores { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; margin-top: 25px; }
+.card { min-width: 0; background: #151518; border: 1px solid #303035; border-radius: 8px; padding: 25px; transition: transform 0.2s, border-color 0.2s; overflow-wrap: anywhere; }
+.card:hover { transform: translateY(-4px); border-color: #e10600; }
+.card .categoria { color: #ff302a; font-size: 11px; font-weight: 900; letter-spacing: 1.5px; margin-bottom: 12px; }
+.card h3 { font-size: 20px; line-height: 1.3; margin-bottom: 12px; }
+.card > p:not(.categoria) { color: #b8b8bd; font-size: 14px; margin-bottom: 12px; }
+.card a { display: inline-block; color: #ff302a; font-size: 12px; font-weight: 900; letter-spacing: 0.5px; margin-top: 8px; }
+.card a:hover { color: #ffffff; }
+#pesquisa-piloto { width: 100%; padding: 14px; background: #151518; color: #ffffff; border: 1px solid #444444; border-radius: 5px; font-size: 15px; margin-bottom: 20px; }
+#pesquisa-piloto:focus { outline: 2px solid #e10600; outline-offset: 2px; }
+#resultado-pilotos { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
+footer { text-align: center; padding: 35px 20px; background: #111114; color: #999999; }
+footer .logo { color: #ffffff; margin-bottom: 8px; }
+footer p { font-size: 13px; margin-top: 5px; }
+@media (max-width: 800px) { header { flex-direction: column; padding: 18px 5%; } nav { justify-content: center; gap: 12px 18px; } .destaque { padding: 75px 7%; min-height: 440px; } .secao { padding: 55px 7%; } .card { padding: 20px; } }
+@media (max-width: 400px) { .logo { font-size: 21px; } nav { gap: 10px 14px; } nav a { font-size: 12px; } }
+.imagem-noticia { display: block; width: 100%; height: 165px; object-fit: cover; border-radius: 5px; margin-bottom: 18px; background: #242428; }
+#lista-noticias .card { overflow: hidden; }
+#lista-noticias .card h3 { font-size: 21px; line-height: 1.35; }
+#lista-noticias .card a { display: inline-block; margin-top: 12px; padding-bottom: 3px; border-bottom: 1px solid #e10600; }
+.foto-piloto { display: block; width: 100%; height: 240px; object-fit: cover; object-position: center top; border-radius: 6px; margin-bottom: 16px; background: #151518; }
+#resultados-f1, #resultados-f2, #resultados-f3, #resultados-f1academy { width: 100%; overflow-x: auto; margin: 18px 0 35px; }
+.tabela-resultados { width: 100%; border-collapse: collapse; background: #151518; border: 1px solid #303035; border-radius: 8px; overflow: hidden; text-align: left; }
+.tabela-resultados th, .tabela-resultados td { padding: 14px 16px; border-bottom: 1px solid #303035; }
+.tabela-resultados th { background: #e10600; color: #fff; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+.tabela-resultados td { color: #eee; font-size: 14px; }
+.tabela-resultados tbody tr:hover { background: #242428; }
+.tabela-resultados tbody tr:last-child td { border-bottom: none; }
+.tabela-resultados td:last-child { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <!-- CABEÇALHO -->
+  <header>
+    <div class="logo">PIT STOP <span>360</span></div>
+    <nav>
+      <a href="#inicio">Início</a>
+      <a href="#noticias">Notícias</a>
+      <a href="#calendario">Calendário</a>
+      <a href="#campeonato">Campeonato</a>
+      <a href="#aprender">Aprenda</a>
+    </nav>
+  </header>
+  <main>
+    <!-- INÍCIO -->
+    <section id="inicio" class="destaque">
+      <p class="etiqueta">O MUNDO DO AUTOMOBILISMO</p>
+      <h1>Velocidade.<br>Informação.<br><span>Paixão.</span></h1>
+      <p>Notícias, análises e curiosidades para quem vive a emoção das corridas.</p>
+      <a class="botao" href="#noticias">VER NOTÍCIAS</a>
+    </section>
+    <!-- NOTÍCIAS -->
+    <section id="noticias" class="secao">
+      <p class="etiqueta">FIQUE POR DENTRO</p><h2>Últimas notícias</h2>
+      <p>As principais novidades do mundo das corridas.</p><div id="lista-noticias"></div>
+    </section>
+    <!-- CALENDÁRIO -->
+    <section id="calendario" class="secao">
+      <p class="etiqueta">PRÓXIMAS EMOÇÕES</p><h2>Calendário do automobilismo</h2>
+      <p>Acompanhe as etapas das principais categorias.</p>
+      <h3 class="subtitulo-calendario">Fórmula 1</h3><div id="calendario-f1"><p>Carregando calendário da Fórmula 1...</p></div>
+      <a class="botao" href="https://www.formula1.com/en/racing/2026" target="_blank" rel="noopener noreferrer">CALENDÁRIO OFICIAL DA F1 ↗</a>
+      <h3 class="subtitulo-calendario">Fórmula 2</h3><div id="calendario-f2"><p>Calendário da F2 em construção.</p></div>
+      <a class="botao" href="https://www.fiaformula2.com/" target="_blank" rel="noopener noreferrer">SITE OFICIAL DA F2 ↗</a>
+      <h3 class="subtitulo-calendario">Fórmula 3</h3><div id="calendario-f3"><p>Calendário da F3 em construção.</p></div>
+      <a class="botao" href="https://www.fiaformula3.com/" target="_blank" rel="noopener noreferrer">SITE OFICIAL DA F3 ↗</a>
+      <h3 class="subtitulo-calendario">F1 Academy</h3><div id="calendario-f1academy"><p>Calendário da F1 Academy em construção.</p></div>
+      <a class="botao" href="https://www.f1academy.com/" target="_blank" rel="noopener noreferrer">SITE OFICIAL DA F1 ACADEMY ↗</a>
+    </section>
+    <!-- RETROSPECTIVA -->
+    <section id="temporada" class="secao">
+      <p class="etiqueta">RETROSPECTIVA DAS CORRIDAS</p><h2>Como está a temporada?</h2>
+      <p>Confira quem venceu cada corrida nas principais categorias.</p>
+      <h3 class="subtitulo-calendario">Fórmula 1</h3><div id="resultados-f1"></div>
+      <h3 class="subtitulo-calendario">Fórmula 2</h3><div id="resultados-f2"></div>
+      <h3 class="subtitulo-calendario">Fórmula 3</h3><div id="resultados-f3"></div>
+      <h3 class="subtitulo-calendario">F1 Academy</h3><div id="resultados-f1academy"></div>
+    </section>
+    <!-- CAMPEONATO -->
+    <section id="campeonato" class="secao">
+      <p class="etiqueta">A DISPUTA PELO TÍTULO</p><h2>Campeonato</h2><p>Acompanhe a classificação dos pilotos.</p>
+      <div id="classificacao"></div><h3 class="subtitulo-calendario">Campeonato de Construtores</h3><div id="classificacao-construtores"></div>
+    </section>
+    <!-- APRENDA AUTOMOBILISMO -->
+    <section id="aprender" class="secao">
+      <p class="etiqueta">ENTENDA AS CORRIDAS</p><h2>Aprenda automobilismo</h2>
+      <p>Termos, regras e estratégias explicados sem complicação.</p><div id="lista-aprender"></div>
+    </section>
+  </main>
+  <!-- RODAPÉ -->
+  <footer><div class="logo">PIT STOP <span>360</span></div><p>O automobilismo por todos os ângulos.</p><p>© 2026 Pit Stop 360</p></footer>
+  <script>
+/* =====================================
+   PIT STOP 360 — JAVASCRIPT PRINCIPAL
+===================================== */
+/* NOTÍCIAS */
+const noticias = [
+  { categoria: "FÓRMULA 1", titulo: "A velocidade no limite", resumo: "Acompanhe as novidades, análises e os principais acontecimentos da categoria.", imagem: "https://images.unsplash.com/photo-1773142181818-5842662aea51?auto=format&fit=crop&w=1000&q=80", link: "https://www.formula1.com/" },
+  { categoria: "BASTIDORES", titulo: "A tecnologia por trás dos carros", resumo: "Aerodinâmica, estratégia e engenharia fazem a diferença nas pistas.", imagem: "https://images.unsplash.com/photo-1761751237628-b760f64fc2b7?auto=format&fit=crop&w=1000&q=80", link: "https://www.formula1.com/" },
+  { categoria: "HISTÓRIA DO AUTOMOBILISMO", titulo: "Ícones das pistas", resumo: "Relembre máquinas e momentos que marcaram a história das corridas.", imagem: "https://images.unsplash.com/photo-1768370770353-3fd305271575?auto=format&fit=crop&w=1000&q=80", link: "https://www.formula1.com/" }
+];
+const listaNoticias = document.getElementById("lista-noticias");
+if (listaNoticias) {
+  listaNoticias.innerHTML = "";
+  noticias.forEach(function(noticia) {
+    const card = document.createElement("article"); card.className = "card";
+    card.innerHTML = `<img class="imagem-noticia" src="${noticia.imagem}" alt="Imagem ilustrativa: ${noticia.categoria}" loading="lazy" onerror="this.style.display='none'"><p class="categoria">${noticia.categoria}</p><h3>${noticia.titulo}</h3><p>${noticia.resumo}</p><a href="${noticia.link}" target="_blank" rel="noopener noreferrer">ACESSAR SITE OFICIAL ↗</a>`;
+    listaNoticias.appendChild(card);
+  });
+}
+/* CALENDÁRIOS */
+const categorias = [
+  { id: "calendario-f1", nome: "FÓRMULA 1", resumo: "Consulte as etapas, datas, horários e resultados dos Grandes Prêmios.", link: "https://www.formula1.com/en/racing/2026" },
+  { id: "calendario-f2", nome: "FÓRMULA 2", resumo: "Acompanhe as etapas da categoria de acesso à Fórmula 1.", link: "https://www.fiaformula2.com/" },
+  { id: "calendario-f3", nome: "FÓRMULA 3", resumo: "Confira as corridas dos jovens talentos do automobilismo.", link: "https://www.fiaformula3.com/" },
+  { id: "calendario-f1academy", nome: "F1 ACADEMY", resumo: "Descubra as etapas da categoria feminina de automobilismo.", link: "https://www.f1academy.com/Racing-Series/Calendar" }
+];
+categorias.forEach(function(categoria) {
+  const area = document.getElementById(categoria.id); if (!area) return;
+  area.innerHTML = `<article class="card"><p class="categoria">${categoria.nome}</p><h3>Calendário oficial</h3><p>${categoria.resumo}</p><a href="${categoria.link}" target="_blank" rel="noopener noreferrer">CONSULTAR CALENDÁRIO ↗</a></article>`;
+});
+/* CLASSIFICAÇÃO DE PILOTOS */
+const pilotos = [
+  { nome: "Kimi Antonelli", equipe: "Mercedes", pontos: 340 }, { nome: "George Russell", equipe: "Mercedes", pontos: 238 }, { nome: "Lewis Hamilton", equipe: "Ferrari", pontos: 229 }, { nome: "Max Verstappen", equipe: "Red Bull", pontos: 221 }, { nome: "Charles Leclerc", equipe: "Ferrari", pontos: 215 }, { nome: "Lando Norris", equipe: "McLaren", pontos: 201 }, { nome: "Oscar Piastri", equipe: "McLaren", pontos: 138 }, { nome: "Isack Hadjar", equipe: "Red Bull", pontos: 97 }, { nome: "Liam Lawson", equipe: "Racing Bulls", pontos: 75 }, { nome: "Pierre Gasly", equipe: "Alpine", pontos: 41 }, { nome: "Arvid Lindblad", equipe: "Racing Bulls", pontos: 38 }, { nome: "Franco Colapinto", equipe: "Alpine", pontos: 27 }, { nome: "Oliver Bearman", equipe: "Haas", pontos: 23 }, { nome: "Nico Hulkenberg", equipe: "Audi", pontos: 13 }, { nome: "Gabriel Bortoleto", equipe: "Audi", pontos: 10 }, { nome: "Esteban Ocon", equipe: "Haas", pontos: 7 }, { nome: "Fernando Alonso", equipe: "Aston Martin", pontos: 7 }, { nome: "Carlos Sainz", equipe: "Williams", pontos: 7 }, { nome: "Alexander Albon", equipe: "Williams", pontos: 5 }, { nome: "Yuki Tsunoda", equipe: "Racing Bulls", pontos: 1 }, { nome: "Lance Stroll", equipe: "Aston Martin", pontos: 0 }, { nome: "Valtteri Bottas", equipe: "Cadillac", pontos: 0 }, { nome: "Sergio Perez", equipe: "Cadillac", pontos: 0 }
+];
+const areaClassificacao = document.getElementById("classificacao");
+if (areaClassificacao) {
+  areaClassificacao.innerHTML = `<input id="pesquisa-piloto" type="text" placeholder="Pesquisar piloto..." aria-label="Pesquisar piloto"><div id="resultado-pilotos"></div>`;
+  const pesquisaPiloto = document.getElementById("pesquisa-piloto"); const resultadoPilotos = document.getElementById("resultado-pilotos");
+  function mostrarPilotos(filtro = "") {
+    const encontrados = pilotos.filter(function(piloto) { return piloto.nome.toLowerCase().includes(filtro.toLowerCase()); });
+    if (encontrados.length === 0) { resultadoPilotos.innerHTML = '<p style="color:#aaa;">Nenhum piloto encontrado.</p>'; return; }
+    resultadoPilotos.innerHTML = encontrados.map(function(piloto) {
+      const posicao = pilotos.indexOf(piloto) + 1;
+      return `<article class="card"><p class="categoria">PILOTO ${String(posicao).padStart(2, "0")}</p><h3>${piloto.nome}</h3><p>Equipe: ${piloto.equipe}</p><p><strong>${piloto.pontos} pontos</strong></p></article>`;
+    }).join("");
+  }
+  pesquisaPiloto.addEventListener("input", function() { mostrarPilotos(pesquisaPiloto.value); }); mostrarPilotos();
+}
+/* CLASSIFICAÇÃO DE CONSTRUTORES */
+const construtores = [
+  { nome: "Mercedes", pontos: 578 }, { nome: "Ferrari", pontos: 444 }, { nome: "McLaren", pontos: 339 }, { nome: "Red Bull Racing", pontos: 332 }, { nome: "Racing Bulls", pontos: 100 }, { nome: "Alpine", pontos: 68 }, { nome: "Haas", pontos: 30 }, { nome: "Audi", pontos: 23 }, { nome: "Williams", pontos: 12 }, { nome: "Aston Martin", pontos: 7 }, { nome: "Cadillac", pontos: 0 }
+];
+const areaConstrutores = document.getElementById("classificacao-construtores");
+if (areaConstrutores) {
+  areaConstrutores.innerHTML = "";
+  construtores.forEach(function(equipe, indice) {
+    const card = document.createElement("article"); card.className = "card";
+    card.innerHTML = `<p class="categoria">CONSTRUTOR ${String(indice + 1).padStart(2, "0")}</p><h3>${equipe.nome}</h3><p><strong>${equipe.pontos} pontos</strong></p>`;
+    areaConstrutores.appendChild(card);
+  });
+}
+/* APRENDA AUTOMOBILISMO */
+const aprendizados = [
+  { termo: "Pole Position", explicacao: "Primeiro lugar no grid de largada, normalmente conquistado pelo piloto mais rápido na classificação." },
+  { termo: "Undercut", explicacao: "Estratégia em que o piloto para antes do rival para tentar ganhar posição com pneus novos." },
+  { termo: "Safety Car", explicacao: "Carro de segurança que controla o ritmo da corrida em situações perigosas." },
+  { termo: "DRS", explicacao: "Sistema que abre um elemento da asa traseira em condições permitidas pelas regras para reduzir a resistência do ar." },
+  { termo: "Parada nos boxes", explicacao: "Momento em que o piloto entra nos boxes para trocar pneus ou realizar serviços permitidos." },
+  { termo: "Pódio", explicacao: "Cerimônia de premiação dos três primeiros colocados de uma corrida." }
+];
+const listaAprender = document.getElementById("lista-aprender");
+if (listaAprender) {
+  listaAprender.innerHTML = "";
+  aprendizados.forEach(function(item, indice) {
+    const card = document.createElement("article"); card.className = "card";
+    card.innerHTML = `<p class="categoria">GUIA ${String(indice + 1).padStart(2, "0")}</p><h3>${item.termo}</h3><p>${item.explicacao}</p>`;
+    listaAprender.appendChild(card);
+  });
+}
+/* RETROSPECTIVA DA TEMPORADA 2026 — dados fornecidos pelo usuário */
+(function() {
+  const resultadosTemporada = {
+    "resultados-f1": { colunas: ["Grande Prêmio", "Vencedor"], linhas: [["Austrália", "George Russell"], ["China", "Kimi Antonelli"], ["Japão", "Kimi Antonelli"], ["Miami", "Kimi Antonelli"], ["Canadá", "Kimi Antonelli"], ["Mônaco", "Kimi Antonelli"], ["Barcelona-Catalunha", "Lewis Hamilton"], ["Áustria", "George Russell"], ["Grã-Bretanha", "Charles Leclerc"], ["Bélgica", "Kimi Antonelli"], ["Hungria", "Lando Norris"], ["Países Baixos", "Lando Norris"], ["Itália", "Kimi Antonelli"], ["Espanha", "Kimi Antonelli"], ["Azerbaijão", "George Russell"], ["Bahrein", "Max Verstappen"], ["Singapura", "Max Verstappen"]] },
+    "resultados-f2": { colunas: ["Etapa", "Sprint", "Feature Race"], linhas: [["Miami", "Nikola Tsolov", "Gabriele Minì"], ["Mônaco", "Nicolas Léon", "Nikola Tsolov"], ["Áustria", "John Bennett", "Nikola Tsolov"], ["Bélgica", "Richard Verschoor", "Rafael Câmara"], ["Itália", "Jak Crawford", "Jak Crawford"], ["Azerbaijão", "Dino Beganovic", "Alex Dunne / Rafael Câmara"]] },
+    "resultados-f3": { colunas: ["Etapa", "Sprint", "Feature Race"], linhas: [["Austrália", "Bruno Del Pino", "Ugo Ugochukwu"], ["Mônaco", "Giuseppe Xie", "Brando Badoer"], ["Espanha", "James Wharton", "Theophile Naël"], ["Áustria", "Enzo Rivera", "Noah Stromsted"], ["Grã-Bretanha", "Ugo Ugochukwu", "Maciej Gladysz"], ["Bélgica", "Jin Nakamura", "Enzo Rivera"], ["Hungria", "Theophile Naël", "Freddie Slater"], ["Itália", "Taito Kato", "Nicola Lacorte"], ["Madrid", "Theophile Naël", "Pedro Clerot / Tuukka Taponen"]] },
+    "resultados-f1academy": { colunas: ["Etapa", "Corrida 1", "Corrida 2"], linhas: [["Xangai", "Nina Gademan", "Ella Lloyd / Felbermayr*"], ["Montreal", "Alba Larsen / Palmowski*", "Maya Paatz"], ["Silverstone", "Ella Felbermayr", "Alba Larsen / Palmowski*"], ["Zandvoort", "P. Westcott", "Alba Larsen / Palmowski*"]] }
+  };
+  function criarTabela(id, dados) {
+    const area = document.getElementById(id); if (!area) return;
+    const tabela = document.createElement("table"); tabela.className = "tabela-resultados";
+    const cabecalho = document.createElement("thead"); const linhaCabecalho = document.createElement("tr");
+    dados.colunas.forEach(function(coluna) { const th = document.createElement("th"); th.textContent = coluna; linhaCabecalho.appendChild(th); });
+    cabecalho.appendChild(linhaCabecalho); tabela.appendChild(cabecalho);
+    const corpo = document.createElement("tbody");
+    dados.linhas.forEach(function(linha) { const tr = document.createElement("tr"); linha.forEach(function(valor) { const td = document.createElement("td"); td.textContent = valor; tr.appendChild(td); }); corpo.appendChild(tr); });
+    tabela.appendChild(corpo); area.replaceChildren(tabela);
+  }
+  Object.keys(resultadosTemporada).forEach(function(id) { criarTabela(id, resultadosTemporada[id]); });
+})();
+  </script>
+</body>
+</html>
