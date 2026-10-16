@@ -41,6 +41,23 @@ footer{text-align:center;padding:35px 20px;background:#111114;color:#999}footer 
 .cinema-card{overflow:hidden;background:#151518;border:1px solid #303035;border-radius:8px;transition:transform .2s,border-color .2s}.cinema-card:hover{transform:translateY(-4px);border-color:#e10600}
 .cinema-poster{min-height:180px;padding:22px;display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(135deg,#351010,#17171c);color:#fff;font-size:23px;font-weight:900;line-height:1.2}
 .cinema-info{padding:20px}.cinema-info h3{margin-bottom:8px;font-size:19px;line-height:1.35}.cinema-meta,.cinema-tipo{color:#ff302a;font-size:12px;font-weight:bold}.cinema-info p{margin-top:12px;color:#b8b8bd;font-size:14px}.cinema-info a{display:inline-block;margin-top:14px;color:#ff302a;font-size:12px;font-weight:bold}
+
+/* JANELA DE RESUMO DOS PILOTOS E EQUIPES */
+.card-interativo{cursor:pointer;position:relative}
+.card-interativo:focus-visible{outline:3px solid #ff302a;outline-offset:3px}
+.card-interativo::after{content:"VER RESUMO ↗";display:block;margin-top:14px;color:#ff302a;font-size:11px;font-weight:900;letter-spacing:.7px}
+.modal-resumo{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.78)}
+.modal-resumo.aberto{display:flex}
+.modal-conteudo{position:relative;width:min(100%,560px);max-height:85vh;overflow-y:auto;background:#151518;border:1px solid #45454d;border-top:4px solid #e10600;border-radius:10px;padding:30px;box-shadow:0 20px 70px rgba(0,0,0,.5)}
+.modal-fechar{position:absolute;top:12px;right:14px;width:38px;height:38px;border:1px solid #555;border-radius:6px;background:#222;color:#fff;font-size:25px;cursor:pointer}
+.modal-fechar:hover{background:#e10600;border-color:#e10600}
+.modal-conteudo .categoria{color:#ff302a;font-size:11px;font-weight:900;letter-spacing:1.5px;margin:0 45px 10px 0}
+.modal-conteudo h2{font-size:clamp(26px,5vw,36px);line-height:1.15;margin-bottom:8px}
+.modal-subtitulo{color:#aaa;margin-bottom:20px}
+.modal-conteudo p:not(.categoria):not(.modal-subtitulo){color:#d0d0d5;margin-top:12px}
+.modal-destaque{display:inline-block;margin-top:15px;padding:8px 12px;border-radius:5px;background:#252529;font-weight:bold}
+body.modal-aberto{overflow:hidden}
+
 </style>
 </head>
 <body>
@@ -73,6 +90,17 @@ footer{text-align:center;padding:35px 20px;background:#111114;color:#999}footer 
   </div><div id="lista-cinema" aria-live="polite"></div>
 </section>
 </main>
+
+<div id="modal-resumo" class="modal-resumo" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+  <div class="modal-conteudo">
+    <button class="modal-fechar" type="button" aria-label="Fechar resumo">×</button>
+    <p class="categoria" id="modal-categoria">PIT STOP 360</p>
+    <h2 id="modal-titulo">Resumo</h2>
+    <p class="modal-subtitulo" id="modal-subtitulo"></p>
+    <div id="modal-detalhes"></div>
+  </div>
+</div>
+
 <footer><div class="logo">PIT STOP <span>360</span></div><p>O automobilismo por todos os ângulos.</p><p>© 2026 Pit Stop 360</p></footer>
 <script>
 /* CORES DAS EQUIPES */
@@ -97,12 +125,12 @@ const pilotos=[
 const areaClassificacao=document.getElementById("classificacao");
 areaClassificacao.innerHTML='<input id="pesquisa-piloto" type="text" placeholder="Pesquisar piloto ou equipe..." aria-label="Pesquisar piloto ou equipe"><div id="resultado-pilotos"></div>';
 const pesquisaPiloto=document.getElementById("pesquisa-piloto"),resultadoPilotos=document.getElementById("resultado-pilotos"),pilotosOrdenados=[...pilotos].sort((a,b)=>b.pontos-a.pontos);
-function mostrarPilotos(filtro=""){const termo=filtro.toLowerCase().trim(),encontrados=pilotosOrdenados.filter(p=>p.nome.toLowerCase().includes(termo)||p.equipe.toLowerCase().includes(termo));if(!encontrados.length){resultadoPilotos.innerHTML='<p style="color:#aaa">Nenhum piloto encontrado.</p>';return;}resultadoPilotos.innerHTML=encontrados.map(p=>{const pos=pilotosOrdenados.indexOf(p)+1,cor=coresEquipes[p.equipe]||"#E10600",numero=p.numero===null?"Número não confirmado":"#"+p.numero;return `<article class="card" style="border-left:5px solid:${cor}"><p style="display:inline-block;background:${cor};color:${corDoTexto(cor)};padding:6px 12px;border-radius:5px;font-weight:900;margin-bottom:12px">P${String(pos).padStart(2,"0")}</p><p style="font-size:13px;color:#aaa">${numero}</p><h3>${p.nome}</h3><p>Equipe: <span style="color:${cor};font-weight:bold">${p.equipe}</span></p><p><strong>${p.pontos} pontos</strong></p></article>`;}).join("");}
+function mostrarPilotos(filtro=""){const termo=filtro.toLowerCase().trim(),encontrados=pilotosOrdenados.filter(p=>p.nome.toLowerCase().includes(termo)||p.equipe.toLowerCase().includes(termo));if(!encontrados.length){resultadoPilotos.innerHTML='<p style="color:#aaa">Nenhum piloto encontrado.</p>';return;}resultadoPilotos.innerHTML=encontrados.map(p=>{const pos=pilotosOrdenados.indexOf(p)+1,cor=coresEquipes[p.equipe]||"#E10600",numero=p.numero===null?"Número não confirmado":"#"+p.numero;return `<article class="card card-interativo" data-piloto="${p.nome}" role="button" tabindex="0" aria-label="Ver resumo de ${p.nome}" style="border-left:5px solid:${cor}"><p style="display:inline-block;background:${cor};color:${corDoTexto(cor)};padding:6px 12px;border-radius:5px;font-weight:900;margin-bottom:12px">P${String(pos).padStart(2,"0")}</p><p style="font-size:13px;color:#aaa">${numero}</p><h3>${p.nome}</h3><p>Equipe: <span style="color:${cor};font-weight:bold">${p.equipe}</span></p><p><strong>${p.pontos} pontos</strong></p></article>`;}).join("");}
 pesquisaPiloto.addEventListener("input",()=>mostrarPilotos(pesquisaPiloto.value));mostrarPilotos();
 
 /* CLASSIFICAÇÃO DE CONSTRUTORES — dados mantidos do código enviado */
 const construtores=[{nome:"Mercedes",pontos:578},{nome:"Ferrari",pontos:444},{nome:"McLaren",pontos:339},{nome:"Red Bull Racing",pontos:332},{nome:"Racing Bulls",pontos:100},{nome:"Alpine",pontos:68},{nome:"Haas",pontos:30},{nome:"Audi",pontos:23},{nome:"Williams",pontos:12},{nome:"Aston Martin",pontos:7},{nome:"Cadillac",pontos:0}];
-[...construtores].sort((a,b)=>b.pontos-a.pontos).forEach((e,i)=>{const cor=coresEquipes[e.nome]||"#E10600",card=document.createElement("article");card.className="card";card.style.borderLeft=`5px solid ${cor}`;card.innerHTML=`<p style="display:inline-block;background:${cor};color:${corDoTexto(cor)};padding:6px 12px;border-radius:5px;font-weight:900;margin-bottom:12px">P${String(i+1).padStart(2,"0")}</p><h3>${e.nome}</h3><p><strong>${e.pontos} pontos</strong></p>`;document.getElementById("classificacao-construtores").appendChild(card);});
+[...construtores].sort((a,b)=>b.pontos-a.pontos).forEach((e,i)=>{const cor=coresEquipes[e.nome]||"#E10600",card=document.createElement("article");card.className="card card-interativo";card.dataset.equipe=e.nome;card.setAttribute("role","button");card.tabIndex=0;card.setAttribute("aria-label",`Ver resumo da equipe ${e.nome}`);card.style.borderLeft=`5px solid ${cor}`;card.innerHTML=`<p style="display:inline-block;background:${cor};color:${corDoTexto(cor)};padding:6px 12px;border-radius:5px;font-weight:900;margin-bottom:12px">P${String(i+1).padStart(2,"0")}</p><h3>${e.nome}</h3><p><strong>${e.pontos} pontos</strong></p>`;document.getElementById("classificacao-construtores").appendChild(card);});
 
 /* APRENDA AUTOMOBILISMO */
 const aprendizados=[{termo:"Pole Position",explicacao:"Primeiro lugar no grid de largada, normalmente conquistado pelo piloto mais rápido na classificação."},{termo:"Undercut",explicacao:"Estratégia em que o piloto para antes do rival para tentar ganhar posição com pneus novos."},{termo:"Safety Car",explicacao:"Carro de segurança que controla o ritmo da corrida em situações perigosas."},{termo:"DRS",explicacao:"Sistema que abre um elemento da asa traseira em condições permitidas pelas regras para reduzir a resistência do ar."},{termo:"Parada nos boxes",explicacao:"Momento em que o piloto entra nos boxes para trocar pneus ou realizar serviços permitidos."},{termo:"Pódio",explicacao:"Cerimônia de premiação dos três primeiros colocados de uma corrida."}];
@@ -117,6 +145,74 @@ const dados={
 "resultados-f1academy":{colunas:["Etapa","Corrida 1","Corrida 2"],linhas:[["Xangai","Nina Gademan","Ella Lloyd / Felbermayr*"],["Montreal","Alba Larsen / Palmowski*","Maya Paatz"],["Silverstone","Ella Felbermayr","Alba Larsen / Palmowski*"],["Zandvoort","P. Westcott","Alba Larsen / Palmowski*"]]}};
 function criarTabela(id,d){const area=document.getElementById(id),table=document.createElement("table");table.className="tabela-resultados";const thead=document.createElement("thead"),tr=document.createElement("tr");d.colunas.forEach(c=>{const th=document.createElement("th");th.textContent=c;tr.appendChild(th);});thead.appendChild(tr);table.appendChild(thead);const tbody=document.createElement("tbody");d.linhas.forEach(row=>{const tr2=document.createElement("tr");row.forEach(v=>{const td=document.createElement("td");td.textContent=v;tr2.appendChild(td);});tbody.appendChild(tr2);});table.appendChild(tbody);area.replaceChildren(table);}
 Object.keys(dados).forEach(id=>criarTabela(id,dados[id]));
+})();
+
+
+/* RESUMOS INTERATIVOS DE PILOTOS E EQUIPES */
+(function(){
+ const modal=document.getElementById("modal-resumo"),titulo=document.getElementById("modal-titulo"),categoria=document.getElementById("modal-categoria"),subtitulo=document.getElementById("modal-subtitulo"),detalhes=document.getElementById("modal-detalhes"),fechar=modal.querySelector(".modal-fechar");
+ const perfisPilotos={
+  "Kimi Antonelli":"Jovem talento italiano que chegou à Fórmula 1 com grande expectativa e representa a Mercedes.",
+  "George Russell":"Piloto britânico conhecido pela consistência e pela velocidade em classificação, competindo pela Mercedes.",
+  "Lewis Hamilton":"Sete vezes campeão mundial, é um dos pilotos mais vitoriosos da história da Fórmula 1 e corre pela Ferrari.",
+  "Max Verstappen":"Quatro vezes campeão mundial, é conhecido pelo ritmo forte e pela agressividade nas disputas.",
+  "Charles Leclerc":"Piloto monegasco da Ferrari, reconhecido pela velocidade em uma volta e por suas atuações em classificação.",
+  "Lando Norris":"Piloto britânico da McLaren, vencedor de corridas e conhecido pelo ritmo competitivo e pela proximidade com os fãs.",
+  "Oscar Piastri":"Piloto australiano da McLaren, campeão nas categorias de base antes de chegar à Fórmula 1.",
+  "Isack Hadjar":"Piloto francês que avançou pelas categorias de base até chegar à Fórmula 1 com apoio do programa Red Bull.",
+  "Liam Lawson":"Piloto neozelandês que chegou à Fórmula 1 pelo programa de jovens pilotos da Red Bull.",
+  "Pierre Gasly":"Piloto francês e vencedor de Grande Prêmio, atualmente associado à Alpine.",
+  "Arvid Lindblad":"Jovem piloto britânico promovido à Fórmula 1 após competir nas categorias de formação.",
+  "Franco Colapinto":"Piloto argentino que passou pelas categorias de base e chegou à Fórmula 1 pela Alpine.",
+  "Oliver Bearman":"Piloto britânico formado na academia da Ferrari, conhecido por suas oportunidades precoces na Fórmula 1.",
+  "Nico Hulkenberg":"Piloto alemão experiente, conhecido por sua longa trajetória e consistência na categoria.",
+  "Gabriel Bortoleto":"Piloto brasileiro e campeão da Fórmula 3 e da Fórmula 2 antes de chegar à Fórmula 1.",
+  "Esteban Ocon":"Piloto francês e vencedor de Grande Prêmio, com experiência em diferentes equipes da Fórmula 1.",
+  "Fernando Alonso":"Bicampeão mundial espanhol, conhecido pela longevidade, inteligência de corrida e talento em disputas.",
+  "Carlos Sainz":"Piloto espanhol experiente, vencedor de Grandes Prêmios e conhecido pela leitura estratégica das corridas.",
+  "Alexander Albon":"Piloto tailandês-britânico que combina experiência e velocidade e representa a Williams.",
+  "Yuki Tsunoda":"Piloto japonês que chegou à Fórmula 1 após competir nas categorias de base europeias.",
+  "Lance Stroll":"Piloto canadense que compete na Fórmula 1 desde 2017.",
+  "Valtteri Bottas":"Piloto finlandês experiente, vencedor de corridas e múltiplas vezes vice-campeão mundial.",
+  "Sergio Perez":"Piloto mexicano experiente, vencedor de Grandes Prêmios e conhecido pela gestão de pneus."
+ };
+ const perfisEquipes={
+  "Mercedes":"Equipe alemã com uma longa história na categoria e uma era de grande domínio na Fórmula 1 híbrida.",
+  "Ferrari":"Uma das equipes mais tradicionais e populares do automobilismo, presente na Fórmula 1 desde o campeonato inaugural de 1950.",
+  "McLaren":"Equipe britânica histórica, dona de múltiplos títulos mundiais e conhecida por seus carros laranja e papaya.",
+  "Red Bull Racing":"Equipe que conquistou vários títulos de pilotos e construtores desde sua chegada à Fórmula 1 em 2005.",
+  "Racing Bulls":"Equipe irmã da Red Bull, conhecida por desenvolver jovens talentos e abrir caminho para pilotos na categoria.",
+  "Alpine":"Equipe francesa ligada à marca Alpine, com raízes na história da Renault na Fórmula 1.",
+  "Haas":"Equipe norte-americana que estreou na Fórmula 1 em 2016.",
+  "Audi":"Projeto de Fórmula 1 da fabricante alemã Audi, que assume a estrutura anteriormente ligada à Sauber.",
+  "Williams":"Equipe britânica histórica, campeã de pilotos e construtores em várias temporadas e conhecida por sua tradição.",
+  "Aston Martin":"Equipe britânica que compete com o nome Aston Martin e tem ambições de disputar posições de destaque.",
+  "Cadillac":"Projeto norte-americano que representa a entrada da Cadillac na Fórmula 1."
+ };
+ function abrir(tipo,nome,origem){
+  const piloto=tipo==="piloto"?pilotos.find(p=>p.nome===nome):null;
+  const equipe=tipo==="equipe"?construtores.find(e=>e.nome===nome):null;
+  categoria.textContent=tipo==="piloto"?"PERFIL DO PILOTO":"PERFIL DA EQUIPE";
+  titulo.textContent=nome;
+  detalhes.replaceChildren();
+  if(piloto){
+   subtitulo.textContent=`${piloto.equipe} · ${piloto.numero===null?"Número não confirmado":"Número #"+piloto.numero}`;
+   const resumo=document.createElement("p");resumo.textContent=perfisPilotos[nome]||"Piloto que compete na Fórmula 1 e representa sua equipe ao longo da temporada.";detalhes.appendChild(resumo);
+   const pontos=document.createElement("div");pontos.className="modal-destaque";pontos.textContent=`${piloto.pontos} pontos na classificação exibida`;detalhes.appendChild(pontos);
+   const equipeP=document.createElement("p");equipeP.textContent="Equipe: "+piloto.equipe;detalhes.appendChild(equipeP);
+  }else if(equipe){
+   const pilotosEquipe=pilotos.filter(p=>p.equipe===nome|| (nome==="Red Bull Racing"&&p.equipe==="Red Bull"));
+   subtitulo.textContent="Classificação de construtores";
+   const resumo=document.createElement("p");resumo.textContent=perfisEquipes[nome]||"Equipe participante do campeonato de Fórmula 1.";detalhes.appendChild(resumo);
+   const pontos=document.createElement("div");pontos.className="modal-destaque";pontos.textContent=`${equipe.pontos} pontos na classificação exibida`;detalhes.appendChild(pontos);
+   const lista=document.createElement("p");lista.textContent="Pilotos listados no site: "+(pilotosEquipe.length?pilotosEquipe.map(p=>p.nome).join(", "):"nenhum piloto associado na lista atual");detalhes.appendChild(lista);
+  }
+  modal.classList.add("aberto");modal.setAttribute("aria-hidden","false");document.body.classList.add("modal-aberto");fechar.focus();
+ }
+ function fecharModal(){modal.classList.remove("aberto");modal.setAttribute("aria-hidden","true");document.body.classList.remove("modal-aberto");}
+ document.addEventListener("click",e=>{const card=e.target.closest("[data-piloto],[data-equipe]");if(card){if(card.dataset.piloto)abrir("piloto",card.dataset.piloto,card);else abrir("equipe",card.dataset.equipe,card);}});
+ document.addEventListener("keydown",e=>{const card=e.target.closest&&e.target.closest("[data-piloto],[data-equipe]");if(card&&(e.key==="Enter"||e.key===" ")){e.preventDefault();if(card.dataset.piloto)abrir("piloto",card.dataset.piloto,card);else abrir("equipe",card.dataset.equipe,card);}if(e.key==="Escape"&&modal.classList.contains("aberto"))fecharModal();});
+ fechar.addEventListener("click",fecharModal);modal.addEventListener("click",e=>{if(e.target===modal)fecharModal();});
 })();
 
 /* CATÁLOGO DE FILMES, SÉRIES E DOCUMENTÁRIOS */
