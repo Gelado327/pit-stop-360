@@ -412,6 +412,7 @@ if (areaConstrutores) {
       >
         P${String(indice + 1).padStart(2, "0")}
       </p>
+
       <h3>${equipe.nome}</h3>
       <p><strong>${equipe.pontos} pontos</strong></p>
     `;
@@ -469,9 +470,7 @@ if (listaAprender) {
   });
 }
 
-/* RETROSPECTIVA DA TEMPORADA 2026
-   Mantidos os dados do código anterior.
-*/
+/* RETROSPECTIVA DA TEMPORADA 2026 */
 (function() {
   const resultadosTemporada = {
     "resultados-f1": {
@@ -576,6 +575,7 @@ if (listaAprender) {
     criarTabela(id, resultadosTemporada[id]);
   });
 })();
-
+</script>
 </body>
 </html>
+
