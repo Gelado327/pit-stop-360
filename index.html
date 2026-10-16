@@ -121,104 +121,461 @@ footer p { font-size: 13px; margin-top: 5px; }
   <!-- RODAPÉ -->
   <footer><div class="logo">PIT STOP <span>360</span></div><p>O automobilismo por todos os ângulos.</p><p>© 2026 Pit Stop 360</p></footer>
   <script>
+
 /* =====================================
    PIT STOP 360 — JAVASCRIPT PRINCIPAL
 ===================================== */
+
+/* CORES DAS EQUIPES */
+const coresEquipes = {
+  "Mercedes": "#00D2BE",
+  "Ferrari": "#E10600",
+  "Red Bull": "#3671C6",
+  "Red Bull Racing": "#3671C6",
+  "McLaren": "#FF8000",
+  "Racing Bulls": "#00B4FF",
+  "Alpine": "#FF69B4",
+  "Haas": "#FFFFFF",
+  "Audi": "#B1B3B3",
+  "Williams": "#1868DB",
+  "Aston Martin": "#556B2F",
+  "Cadillac": "#E5E5E5"
+};
+
+function corDoTexto(cor) {
+  const coresClaras = [
+    "#FFFFFF", "#E5E5E5", "#B1B3B3",
+    "#FF69B4", "#00D2BE", "#FF8000", "#00B4FF"
+  ];
+
+  return coresClaras.includes(cor) ? "#111111" : "#FFFFFF";
+}
+
 /* NOTÍCIAS */
 const noticias = [
-  { categoria: "FÓRMULA 1", titulo: "A velocidade no limite", resumo: "Acompanhe as novidades, análises e os principais acontecimentos da categoria.", imagem: "https://images.unsplash.com/photo-1773142181818-5842662aea51?auto=format&fit=crop&w=1000&q=80", link: "https://www.formula1.com/" },
-  { categoria: "BASTIDORES", titulo: "A tecnologia por trás dos carros", resumo: "Aerodinâmica, estratégia e engenharia fazem a diferença nas pistas.", imagem: "https://images.unsplash.com/photo-1761751237628-b760f64fc2b7?auto=format&fit=crop&w=1000&q=80", link: "https://www.formula1.com/" },
-  { categoria: "HISTÓRIA DO AUTOMOBILISMO", titulo: "Ícones das pistas", resumo: "Relembre máquinas e momentos que marcaram a história das corridas.", imagem: "https://images.unsplash.com/photo-1768370770353-3fd305271575?auto=format&fit=crop&w=1000&q=80", link: "https://www.formula1.com/" }
+  {
+    categoria: "FÓRMULA 1",
+    titulo: "A velocidade no limite",
+    resumo: "Acompanhe as novidades, análises e os principais acontecimentos da categoria.",
+    imagem: "https://images.unsplash.com/photo-1773142181818-5842662aea51?auto=format&fit=crop&w=1000&q=80",
+    link: "https://www.formula1.com/"
+  },
+  {
+    categoria: "BASTIDORES",
+    titulo: "A tecnologia por trás dos carros",
+    resumo: "Aerodinâmica, estratégia e engenharia fazem a diferença nas pistas.",
+    imagem: "https://images.unsplash.com/photo-1761751237628-b760f64fc2b7?auto=format&fit=crop&w=1000&q=80",
+    link: "https://www.formula1.com/"
+  },
+  {
+    categoria: "HISTÓRIA DO AUTOMOBILISMO",
+    titulo: "Ícones das pistas",
+    resumo: "Relembre máquinas e momentos que marcaram a história das corridas.",
+    imagem: "https://images.unsplash.com/photo-1768370770353-3fd305271575?auto=format&fit=crop&w=1000&q=80",
+    link: "https://www.formula1.com/"
+  }
 ];
+
 const listaNoticias = document.getElementById("lista-noticias");
+
 if (listaNoticias) {
   listaNoticias.innerHTML = "";
+
   noticias.forEach(function(noticia) {
-    const card = document.createElement("article"); card.className = "card";
-    card.innerHTML = `<img class="imagem-noticia" src="${noticia.imagem}" alt="Imagem ilustrativa: ${noticia.categoria}" loading="lazy" onerror="this.style.display='none'"><p class="categoria">${noticia.categoria}</p><h3>${noticia.titulo}</h3><p>${noticia.resumo}</p><a href="${noticia.link}" target="_blank" rel="noopener noreferrer">ACESSAR SITE OFICIAL ↗</a>`;
+    const card = document.createElement("article");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img
+        class="imagem-noticia"
+        src="${noticia.imagem}"
+        alt="Imagem ilustrativa: ${noticia.categoria}"
+        loading="lazy"
+        onerror="this.style.display='none'"
+      >
+      <p class="categoria">${noticia.categoria}</p>
+      <h3>${noticia.titulo}</h3>
+      <p>${noticia.resumo}</p>
+      <a href="${noticia.link}" target="_blank" rel="noopener noreferrer">
+        ACESSAR SITE OFICIAL ↗
+      </a>
+    `;
+
     listaNoticias.appendChild(card);
   });
 }
+
 /* CALENDÁRIOS */
 const categorias = [
-  { id: "calendario-f1", nome: "FÓRMULA 1", resumo: "Consulte as etapas, datas, horários e resultados dos Grandes Prêmios.", link: "https://www.formula1.com/en/racing/2026" },
-  { id: "calendario-f2", nome: "FÓRMULA 2", resumo: "Acompanhe as etapas da categoria de acesso à Fórmula 1.", link: "https://www.fiaformula2.com/" },
-  { id: "calendario-f3", nome: "FÓRMULA 3", resumo: "Confira as corridas dos jovens talentos do automobilismo.", link: "https://www.fiaformula3.com/" },
-  { id: "calendario-f1academy", nome: "F1 ACADEMY", resumo: "Descubra as etapas da categoria feminina de automobilismo.", link: "https://www.f1academy.com/Racing-Series/Calendar" }
+  {
+    id: "calendario-f1",
+    nome: "FÓRMULA 1",
+    resumo: "Consulte as etapas, datas, horários e resultados dos Grandes Prêmios.",
+    link: "https://www.formula1.com/en/racing/2026"
+  },
+  {
+    id: "calendario-f2",
+    nome: "FÓRMULA 2",
+    resumo: "Acompanhe as etapas da categoria de acesso à Fórmula 1.",
+    link: "https://www.fiaformula2.com/"
+  },
+  {
+    id: "calendario-f3",
+    nome: "FÓRMULA 3",
+    resumo: "Confira as corridas dos jovens talentos do automobilismo.",
+    link: "https://www.fiaformula3.com/"
+  },
+  {
+    id: "calendario-f1academy",
+    nome: "F1 ACADEMY",
+    resumo: "Descubra as etapas da categoria feminina de automobilismo.",
+    link: "https://www.f1academy.com/Racing-Series/Calendar"
+  }
 ];
+
 categorias.forEach(function(categoria) {
-  const area = document.getElementById(categoria.id); if (!area) return;
-  area.innerHTML = `<article class="card"><p class="categoria">${categoria.nome}</p><h3>Calendário oficial</h3><p>${categoria.resumo}</p><a href="${categoria.link}" target="_blank" rel="noopener noreferrer">CONSULTAR CALENDÁRIO ↗</a></article>`;
+  const area = document.getElementById(categoria.id);
+  if (!area) return;
+
+  area.innerHTML = `
+    <article class="card">
+      <p class="categoria">${categoria.nome}</p>
+      <h3>Calendário oficial</h3>
+      <p>${categoria.resumo}</p>
+      <a href="${categoria.link}" target="_blank" rel="noopener noreferrer">
+        CONSULTAR CALENDÁRIO ↗
+      </a>
+    </article>
+  `;
 });
+
 /* CLASSIFICAÇÃO DE PILOTOS */
 const pilotos = [
-  { nome: "Kimi Antonelli", equipe: "Mercedes", pontos: 340 }, { nome: "George Russell", equipe: "Mercedes", pontos: 238 }, { nome: "Lewis Hamilton", equipe: "Ferrari", pontos: 229 }, { nome: "Max Verstappen", equipe: "Red Bull", pontos: 221 }, { nome: "Charles Leclerc", equipe: "Ferrari", pontos: 215 }, { nome: "Lando Norris", equipe: "McLaren", pontos: 201 }, { nome: "Oscar Piastri", equipe: "McLaren", pontos: 138 }, { nome: "Isack Hadjar", equipe: "Red Bull", pontos: 97 }, { nome: "Liam Lawson", equipe: "Racing Bulls", pontos: 75 }, { nome: "Pierre Gasly", equipe: "Alpine", pontos: 41 }, { nome: "Arvid Lindblad", equipe: "Racing Bulls", pontos: 38 }, { nome: "Franco Colapinto", equipe: "Alpine", pontos: 27 }, { nome: "Oliver Bearman", equipe: "Haas", pontos: 23 }, { nome: "Nico Hulkenberg", equipe: "Audi", pontos: 13 }, { nome: "Gabriel Bortoleto", equipe: "Audi", pontos: 10 }, { nome: "Esteban Ocon", equipe: "Haas", pontos: 7 }, { nome: "Fernando Alonso", equipe: "Aston Martin", pontos: 7 }, { nome: "Carlos Sainz", equipe: "Williams", pontos: 7 }, { nome: "Alexander Albon", equipe: "Williams", pontos: 5 }, { nome: "Yuki Tsunoda", equipe: "Racing Bulls", pontos: 1 }, { nome: "Lance Stroll", equipe: "Aston Martin", pontos: 0 }, { nome: "Valtteri Bottas", equipe: "Cadillac", pontos: 0 }, { nome: "Sergio Perez", equipe: "Cadillac", pontos: 0 }
+  { nome: "Kimi Antonelli", numero: 12, equipe: "Mercedes", pontos: 340 },
+  { nome: "George Russell", numero: 63, equipe: "Mercedes", pontos: 238 },
+  { nome: "Lewis Hamilton", numero: 44, equipe: "Ferrari", pontos: 229 },
+  { nome: "Max Verstappen", numero: 3, equipe: "Red Bull", pontos: 221 },
+  { nome: "Charles Leclerc", numero: 16, equipe: "Ferrari", pontos: 215 },
+  { nome: "Lando Norris", numero: 1, equipe: "McLaren", pontos: 201 },
+  { nome: "Oscar Piastri", numero: 81, equipe: "McLaren", pontos: 138 },
+  { nome: "Isack Hadjar", numero: 6, equipe: "Red Bull", pontos: 97 },
+  { nome: "Liam Lawson", numero: 30, equipe: "Racing Bulls", pontos: 75 },
+  { nome: "Pierre Gasly", numero: 10, equipe: "Alpine", pontos: 41 },
+  { nome: "Arvid Lindblad", numero: 41, equipe: "Racing Bulls", pontos: 38 },
+  { nome: "Franco Colapinto", numero: 43, equipe: "Alpine", pontos: 27 },
+  { nome: "Oliver Bearman", numero: 87, equipe: "Haas", pontos: 23 },
+  { nome: "Nico Hulkenberg", numero: 27, equipe: "Audi", pontos: 13 },
+  { nome: "Gabriel Bortoleto", numero: 5, equipe: "Audi", pontos: 10 },
+  { nome: "Esteban Ocon", numero: 31, equipe: "Haas", pontos: 7 },
+  { nome: "Fernando Alonso", numero: 14, equipe: "Aston Martin", pontos: 7 },
+  { nome: "Carlos Sainz", numero: 55, equipe: "Williams", pontos: 7 },
+  { nome: "Alexander Albon", numero: 23, equipe: "Williams", pontos: 5 },
+  { nome: "Yuki Tsunoda", numero: null, equipe: "Racing Bulls", pontos: 1 },
+  { nome: "Lance Stroll", numero: 18, equipe: "Aston Martin", pontos: 0 },
+  { nome: "Valtteri Bottas", numero: 77, equipe: "Cadillac", pontos: 0 },
+  { nome: "Sergio Perez", numero: 11, equipe: "Cadillac", pontos: 0 }
 ];
+
 const areaClassificacao = document.getElementById("classificacao");
+
 if (areaClassificacao) {
-  areaClassificacao.innerHTML = `<input id="pesquisa-piloto" type="text" placeholder="Pesquisar piloto..." aria-label="Pesquisar piloto"><div id="resultado-pilotos"></div>`;
-  const pesquisaPiloto = document.getElementById("pesquisa-piloto"); const resultadoPilotos = document.getElementById("resultado-pilotos");
+  areaClassificacao.innerHTML = `
+    <input
+      id="pesquisa-piloto"
+      type="text"
+      placeholder="Pesquisar piloto ou equipe..."
+      aria-label="Pesquisar piloto ou equipe"
+    >
+    <div id="resultado-pilotos"></div>
+  `;
+
+  const pesquisaPiloto = document.getElementById("pesquisa-piloto");
+  const resultadoPilotos = document.getElementById("resultado-pilotos");
+
+  const pilotosOrdenados = [...pilotos].sort(
+    (a, b) => b.pontos - a.pontos
+  );
+
   function mostrarPilotos(filtro = "") {
-    const encontrados = pilotos.filter(function(piloto) { return piloto.nome.toLowerCase().includes(filtro.toLowerCase()); });
-    if (encontrados.length === 0) { resultadoPilotos.innerHTML = '<p style="color:#aaa;">Nenhum piloto encontrado.</p>'; return; }
+    const termo = filtro.toLowerCase().trim();
+
+    const encontrados = pilotosOrdenados.filter(function(piloto) {
+      return (
+        piloto.nome.toLowerCase().includes(termo) ||
+        piloto.equipe.toLowerCase().includes(termo)
+      );
+    });
+
+    if (encontrados.length === 0) {
+      resultadoPilotos.innerHTML =
+        '<p style="color:#aaa;">Nenhum piloto encontrado.</p>';
+      return;
+    }
+
     resultadoPilotos.innerHTML = encontrados.map(function(piloto) {
-      const posicao = pilotos.indexOf(piloto) + 1;
-      return `<article class="card"><p class="categoria">PILOTO ${String(posicao).padStart(2, "0")}</p><h3>${piloto.nome}</h3><p>Equipe: ${piloto.equipe}</p><p><strong>${piloto.pontos} pontos</strong></p></article>`;
+      const posicao = pilotosOrdenados.indexOf(piloto) + 1;
+      const cor = coresEquipes[piloto.equipe] || "#E10600";
+      const texto = corDoTexto(cor);
+
+      const numeroPiloto = piloto.numero === null
+        ? "Número não confirmado"
+        : `#${piloto.numero}`;
+
+      return `
+        <article
+          class="card"
+          style="border-left:5px solid ${cor};"
+        >
+          <p
+            style="
+              display:inline-block;
+              background:${cor};
+              color:${texto};
+              padding:6px 12px;
+              border-radius:5px;
+              font-weight:900;
+              margin-bottom:12px;
+            "
+          >
+            P${String(posicao).padStart(2, "0")}
+          </p>
+
+          <p style="font-size:13px; color:#aaa;">
+            ${numeroPiloto}
+          </p>
+
+          <h3>${piloto.nome}</h3>
+
+          <p>
+            Equipe:
+            <span style="color:${cor}; font-weight:bold;">
+              ${piloto.equipe}
+            </span>
+          </p>
+
+          <p><strong>${piloto.pontos} pontos</strong></p>
+        </article>
+      `;
     }).join("");
   }
-  pesquisaPiloto.addEventListener("input", function() { mostrarPilotos(pesquisaPiloto.value); }); mostrarPilotos();
+
+  pesquisaPiloto.addEventListener("input", function() {
+    mostrarPilotos(pesquisaPiloto.value);
+  });
+
+  mostrarPilotos();
 }
+
 /* CLASSIFICAÇÃO DE CONSTRUTORES */
 const construtores = [
-  { nome: "Mercedes", pontos: 578 }, { nome: "Ferrari", pontos: 444 }, { nome: "McLaren", pontos: 339 }, { nome: "Red Bull Racing", pontos: 332 }, { nome: "Racing Bulls", pontos: 100 }, { nome: "Alpine", pontos: 68 }, { nome: "Haas", pontos: 30 }, { nome: "Audi", pontos: 23 }, { nome: "Williams", pontos: 12 }, { nome: "Aston Martin", pontos: 7 }, { nome: "Cadillac", pontos: 0 }
+  { nome: "Mercedes", pontos: 578 },
+  { nome: "Ferrari", pontos: 444 },
+  { nome: "McLaren", pontos: 339 },
+  { nome: "Red Bull Racing", pontos: 332 },
+  { nome: "Racing Bulls", pontos: 100 },
+  { nome: "Alpine", pontos: 68 },
+  { nome: "Haas", pontos: 30 },
+  { nome: "Audi", pontos: 23 },
+  { nome: "Williams", pontos: 12 },
+  { nome: "Aston Martin", pontos: 7 },
+  { nome: "Cadillac", pontos: 0 }
 ];
+
 const areaConstrutores = document.getElementById("classificacao-construtores");
+
 if (areaConstrutores) {
   areaConstrutores.innerHTML = "";
-  construtores.forEach(function(equipe, indice) {
-    const card = document.createElement("article"); card.className = "card";
-    card.innerHTML = `<p class="categoria">CONSTRUTOR ${String(indice + 1).padStart(2, "0")}</p><h3>${equipe.nome}</h3><p><strong>${equipe.pontos} pontos</strong></p>`;
+
+  const construtoresOrdenados = [...construtores].sort(
+    (a, b) => b.pontos - a.pontos
+  );
+
+  construtoresOrdenados.forEach(function(equipe, indice) {
+    const cor = coresEquipes[equipe.nome] || "#E10600";
+    const texto = corDoTexto(cor);
+
+    const card = document.createElement("article");
+    card.className = "card";
+    card.style.borderLeft = `5px solid ${cor}`;
+
+    card.innerHTML = `
+      <p
+        style="
+          display:inline-block;
+          background:${cor};
+          color:${texto};
+          padding:6px 12px;
+          border-radius:5px;
+          font-weight:900;
+          margin-bottom:12px;
+        "
+      >
+        P${String(indice + 1).padStart(2, "0")}
+      </p>
+      <h3>${equipe.nome}</h3>
+      <p><strong>${equipe.pontos} pontos</strong></p>
+    `;
+
     areaConstrutores.appendChild(card);
   });
 }
+
 /* APRENDA AUTOMOBILISMO */
 const aprendizados = [
-  { termo: "Pole Position", explicacao: "Primeiro lugar no grid de largada, normalmente conquistado pelo piloto mais rápido na classificação." },
-  { termo: "Undercut", explicacao: "Estratégia em que o piloto para antes do rival para tentar ganhar posição com pneus novos." },
-  { termo: "Safety Car", explicacao: "Carro de segurança que controla o ritmo da corrida em situações perigosas." },
-  { termo: "DRS", explicacao: "Sistema que abre um elemento da asa traseira em condições permitidas pelas regras para reduzir a resistência do ar." },
-  { termo: "Parada nos boxes", explicacao: "Momento em que o piloto entra nos boxes para trocar pneus ou realizar serviços permitidos." },
-  { termo: "Pódio", explicacao: "Cerimônia de premiação dos três primeiros colocados de uma corrida." }
+  {
+    termo: "Pole Position",
+    explicacao: "Primeiro lugar no grid de largada, normalmente conquistado pelo piloto mais rápido na classificação."
+  },
+  {
+    termo: "Undercut",
+    explicacao: "Estratégia em que o piloto para antes do rival para tentar ganhar posição com pneus novos."
+  },
+  {
+    termo: "Safety Car",
+    explicacao: "Carro de segurança que controla o ritmo da corrida em situações perigosas."
+  },
+  {
+    termo: "DRS",
+    explicacao: "Sistema que abre um elemento da asa traseira em condições permitidas pelas regras para reduzir a resistência do ar."
+  },
+  {
+    termo: "Parada nos boxes",
+    explicacao: "Momento em que o piloto entra nos boxes para trocar pneus ou realizar serviços permitidos."
+  },
+  {
+    termo: "Pódio",
+    explicacao: "Cerimônia de premiação dos três primeiros colocados de uma corrida."
+  }
 ];
+
 const listaAprender = document.getElementById("lista-aprender");
+
 if (listaAprender) {
   listaAprender.innerHTML = "";
+
   aprendizados.forEach(function(item, indice) {
-    const card = document.createElement("article"); card.className = "card";
-    card.innerHTML = `<p class="categoria">GUIA ${String(indice + 1).padStart(2, "0")}</p><h3>${item.termo}</h3><p>${item.explicacao}</p>`;
+    const card = document.createElement("article");
+    card.className = "card";
+
+    card.innerHTML = `
+      <p class="categoria">
+        GUIA ${String(indice + 1).padStart(2, "0")}
+      </p>
+      <h3>${item.termo}</h3>
+      <p>${item.explicacao}</p>
+    `;
+
     listaAprender.appendChild(card);
   });
 }
-/* RETROSPECTIVA DA TEMPORADA 2026 — dados fornecidos pelo usuário */
+
+/* RETROSPECTIVA DA TEMPORADA 2026
+   Mantidos os dados do código anterior.
+*/
 (function() {
   const resultadosTemporada = {
-    "resultados-f1": { colunas: ["Grande Prêmio", "Vencedor"], linhas: [["Austrália", "George Russell"], ["China", "Kimi Antonelli"], ["Japão", "Kimi Antonelli"], ["Miami", "Kimi Antonelli"], ["Canadá", "Kimi Antonelli"], ["Mônaco", "Kimi Antonelli"], ["Barcelona-Catalunha", "Lewis Hamilton"], ["Áustria", "George Russell"], ["Grã-Bretanha", "Charles Leclerc"], ["Bélgica", "Kimi Antonelli"], ["Hungria", "Lando Norris"], ["Países Baixos", "Lando Norris"], ["Itália", "Kimi Antonelli"], ["Espanha", "Kimi Antonelli"], ["Azerbaijão", "George Russell"], ["Bahrein", "Max Verstappen"], ["Singapura", "Max Verstappen"]] },
-    "resultados-f2": { colunas: ["Etapa", "Sprint", "Feature Race"], linhas: [["Miami", "Nikola Tsolov", "Gabriele Minì"], ["Mônaco", "Nicolas Léon", "Nikola Tsolov"], ["Áustria", "John Bennett", "Nikola Tsolov"], ["Bélgica", "Richard Verschoor", "Rafael Câmara"], ["Itália", "Jak Crawford", "Jak Crawford"], ["Azerbaijão", "Dino Beganovic", "Alex Dunne / Rafael Câmara"]] },
-    "resultados-f3": { colunas: ["Etapa", "Sprint", "Feature Race"], linhas: [["Austrália", "Bruno Del Pino", "Ugo Ugochukwu"], ["Mônaco", "Giuseppe Xie", "Brando Badoer"], ["Espanha", "James Wharton", "Theophile Naël"], ["Áustria", "Enzo Rivera", "Noah Stromsted"], ["Grã-Bretanha", "Ugo Ugochukwu", "Maciej Gladysz"], ["Bélgica", "Jin Nakamura", "Enzo Rivera"], ["Hungria", "Theophile Naël", "Freddie Slater"], ["Itália", "Taito Kato", "Nicola Lacorte"], ["Madrid", "Theophile Naël", "Pedro Clerot / Tuukka Taponen"]] },
-    "resultados-f1academy": { colunas: ["Etapa", "Corrida 1", "Corrida 2"], linhas: [["Xangai", "Nina Gademan", "Ella Lloyd / Felbermayr*"], ["Montreal", "Alba Larsen / Palmowski*", "Maya Paatz"], ["Silverstone", "Ella Felbermayr", "Alba Larsen / Palmowski*"], ["Zandvoort", "P. Westcott", "Alba Larsen / Palmowski*"]] }
+    "resultados-f1": {
+      colunas: ["Grande Prêmio", "Vencedor"],
+      linhas: [
+        ["Austrália", "George Russell"],
+        ["China", "Kimi Antonelli"],
+        ["Japão", "Kimi Antonelli"],
+        ["Miami", "Kimi Antonelli"],
+        ["Canadá", "Kimi Antonelli"],
+        ["Mônaco", "Kimi Antonelli"],
+        ["Barcelona-Catalunha", "Lewis Hamilton"],
+        ["Áustria", "George Russell"],
+        ["Grã-Bretanha", "Charles Leclerc"],
+        ["Bélgica", "Kimi Antonelli"],
+        ["Hungria", "Lando Norris"],
+        ["Países Baixos", "Lando Norris"],
+        ["Itália", "Kimi Antonelli"],
+        ["Espanha", "Kimi Antonelli"],
+        ["Azerbaijão", "George Russell"],
+        ["Bahrein", "Max Verstappen"],
+        ["Singapura", "Max Verstappen"]
+      ]
+    },
+
+    "resultados-f2": {
+      colunas: ["Etapa", "Sprint", "Feature Race"],
+      linhas: [
+        ["Miami", "Nikola Tsolov", "Gabriele Minì"],
+        ["Mônaco", "Nicolas Léon", "Nikola Tsolov"],
+        ["Áustria", "John Bennett", "Nikola Tsolov"],
+        ["Bélgica", "Richard Verschoor", "Rafael Câmara"],
+        ["Itália", "Jak Crawford", "Jak Crawford"],
+        ["Azerbaijão", "Dino Beganovic", "Alex Dunne / Rafael Câmara"]
+      ]
+    },
+
+    "resultados-f3": {
+      colunas: ["Etapa", "Sprint", "Feature Race"],
+      linhas: [
+        ["Austrália", "Bruno Del Pino", "Ugo Ugochukwu"],
+        ["Mônaco", "Giuseppe Xie", "Brando Badoer"],
+        ["Espanha", "James Wharton", "Theophile Naël"],
+        ["Áustria", "Enzo Rivera", "Noah Stromsted"],
+        ["Grã-Bretanha", "Ugo Ugochukwu", "Maciej Gladysz"],
+        ["Bélgica", "Jin Nakamura", "Enzo Rivera"],
+        ["Hungria", "Theophile Naël", "Freddie Slater"],
+        ["Itália", "Taito Kato", "Nicola Lacorte"],
+        ["Madrid", "Theophile Naël", "Pedro Clerot / Tuukka Taponen"]
+      ]
+    },
+
+    "resultados-f1academy": {
+      colunas: ["Etapa", "Corrida 1", "Corrida 2"],
+      linhas: [
+        ["Xangai", "Nina Gademan", "Ella Lloyd / Felbermayr*"],
+        ["Montreal", "Alba Larsen / Palmowski*", "Maya Paatz"],
+        ["Silverstone", "Ella Felbermayr", "Alba Larsen / Palmowski*"],
+        ["Zandvoort", "P. Westcott", "Alba Larsen / Palmowski*"]
+      ]
+    }
   };
+
   function criarTabela(id, dados) {
-    const area = document.getElementById(id); if (!area) return;
-    const tabela = document.createElement("table"); tabela.className = "tabela-resultados";
-    const cabecalho = document.createElement("thead"); const linhaCabecalho = document.createElement("tr");
-    dados.colunas.forEach(function(coluna) { const th = document.createElement("th"); th.textContent = coluna; linhaCabecalho.appendChild(th); });
-    cabecalho.appendChild(linhaCabecalho); tabela.appendChild(cabecalho);
+    const area = document.getElementById(id);
+    if (!area) return;
+
+    const tabela = document.createElement("table");
+    tabela.className = "tabela-resultados";
+
+    const cabecalho = document.createElement("thead");
+    const linhaCabecalho = document.createElement("tr");
+
+    dados.colunas.forEach(function(coluna) {
+      const th = document.createElement("th");
+      th.textContent = coluna;
+      linhaCabecalho.appendChild(th);
+    });
+
+    cabecalho.appendChild(linhaCabecalho);
+    tabela.appendChild(cabecalho);
+
     const corpo = document.createElement("tbody");
-    dados.linhas.forEach(function(linha) { const tr = document.createElement("tr"); linha.forEach(function(valor) { const td = document.createElement("td"); td.textContent = valor; tr.appendChild(td); }); corpo.appendChild(tr); });
-    tabela.appendChild(corpo); area.replaceChildren(tabela);
+
+    dados.linhas.forEach(function(linha) {
+      const tr = document.createElement("tr");
+
+      linha.forEach(function(valor) {
+        const td = document.createElement("td");
+        td.textContent = valor;
+        tr.appendChild(td);
+      });
+
+      corpo.appendChild(tr);
+    });
+
+    tabela.appendChild(corpo);
+    area.replaceChildren(tabela);
   }
-  Object.keys(resultadosTemporada).forEach(function(id) { criarTabela(id, resultadosTemporada[id]); });
+
+  Object.keys(resultadosTemporada).forEach(function(id) {
+    criarTabela(id, resultadosTemporada[id]);
+  });
 })();
-  </script>
+
 </body>
 </html>
