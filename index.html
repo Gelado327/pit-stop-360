@@ -58,6 +58,17 @@ footer{text-align:center;padding:35px 20px;background:#111114;color:#999}footer 
 .modal-destaque{display:inline-block;margin-top:15px;padding:8px 12px;border-radius:5px;background:#252529;font-weight:bold}
 body.modal-aberto{overflow:hidden}
 
+
+/* NOTÍCIAS AUTOMÁTICAS F1/F2 */
+.noticias-filtros{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0}
+.filtro-noticia{padding:10px 18px;border:1px solid #444;border-radius:4px;background:#151518;color:#eee;cursor:pointer;font-weight:800}
+.filtro-noticia:hover,.filtro-noticia.ativo{background:#e10600;border-color:#e10600;color:#fff}
+.status-noticias{color:#aaa;font-size:14px;margin:10px 0 18px}
+.aviso-noticias{color:#777;font-size:12px;margin-top:20px}
+.noticia-meta{color:#ff302a;font-size:11px;font-weight:900;letter-spacing:.8px;margin-bottom:10px}
+.noticia-data{display:block;color:#888;font-size:12px;margin-top:10px}
+.noticia-fonte{display:inline-block;margin-top:12px;color:#ff302a;font-size:12px;font-weight:900;border-bottom:1px solid #e10600}
+
 </style>
 </head>
 <body>
@@ -72,7 +83,18 @@ body.modal-aberto{overflow:hidden}
   <p class="etiqueta">O MUNDO DO AUTOMOBILISMO</p><h1>Velocidade.<br>Informação.<br><span>Paixão.</span></h1>
   <p>Notícias, análises e curiosidades para quem vive a emoção das corridas.</p><a class="botao" href="#noticias">VER NOTÍCIAS</a>
 </section>
-<section id="noticias" class="secao"><p class="etiqueta">FIQUE POR DENTRO</p><h2>Últimas notícias</h2><p>As principais novidades do mundo das corridas.</p><div id="lista-noticias"></div></section>
+<section id="noticias" class="secao">
+  <p class="etiqueta">FIQUE POR DENTRO</p><h2>Últimas notícias</h2>
+  <p>Novidades da Fórmula 1 e da Fórmula 2, com links para as fontes originais.</p>
+  <div class="noticias-filtros" role="group" aria-label="Filtrar notícias">
+    <button class="filtro-noticia ativo" type="button" data-categoria="Todas">Todas</button>
+    <button class="filtro-noticia" type="button" data-categoria="F1">F1</button>
+    <button class="filtro-noticia" type="button" data-categoria="F2">F2</button>
+  </div>
+  <p id="status-noticias" class="status-noticias" aria-live="polite">Carregando notícias...</p>
+  <div id="lista-noticias" aria-live="polite"></div>
+  <p class="aviso-noticias">Notícias e descrições baseadas nas publicações das fontes originais. A atualização automática depende da execução do GitHub Actions.</p>
+</section>
 <section id="calendario" class="secao">
   <p class="etiqueta">PRÓXIMAS EMOÇÕES</p><h2>Calendário do automobilismo</h2><p>Acompanhe as etapas das principais categorias.</p>
   <h3 class="subtitulo-calendario">Fórmula 1</h3><div id="calendario-f1"><p>Carregando calendário da Fórmula 1...</p></div><a class="botao" href="https://www.formula1.com/en/racing/2026" target="_blank" rel="noopener noreferrer">CALENDÁRIO OFICIAL DA F1 ↗</a>
@@ -107,13 +129,58 @@ body.modal-aberto{overflow:hidden}
 const coresEquipes={"Mercedes":"#00D2BE","Ferrari":"#E10600","Red Bull":"#0B1F3A","Red Bull Racing":"#0B1F3A","McLaren":"#FF8000","Racing Bulls":"#00B4FF","Alpine":"#FF69B4","Haas":"#FFFFFF","Audi":"#B1B3B3","Williams":"#1868DB","Aston Martin":"#556B2F","Cadillac":"#111111"};
 function corDoTexto(cor){return ["#FFFFFF","#E5E5E5","#B1B3B3","#FF69B4","#00D2BE","#FF8000","#00B4FF"].includes(cor)?"#111111":"#FFFFFF";}
 
-/* NOTÍCIAS */
-const noticias=[
-{categoria:"FÓRMULA 1",titulo:"A velocidade no limite",resumo:"Acompanhe as novidades, análises e os principais acontecimentos da categoria.",imagem:"https://images.unsplash.com/photo-1773142181818-5842662aea51?auto=format&fit=crop&w=1000&q=80",link:"https://www.formula1.com/"},
-{categoria:"BASTIDORES",titulo:"A tecnologia por trás dos carros",resumo:"Aerodinâmica, estratégia e engenharia fazem a diferença nas pistas.",imagem:"https://images.unsplash.com/photo-1761751237628-b760f64fc2b7?auto=format&fit=crop&w=1000&q=80",link:"https://www.formula1.com/"},
-{categoria:"HISTÓRIA DO AUTOMOBILISMO",titulo:"Ícones das pistas",resumo:"Relembre máquinas e momentos que marcaram a história das corridas.",imagem:"https://images.unsplash.com/photo-1768370770353-3fd305271575?auto=format&fit=crop&w=1000&q=80",link:"https://www.formula1.com/"}];
-const listaNoticias=document.getElementById("lista-noticias");
-noticias.forEach(n=>{const card=document.createElement("article");card.className="card";const img=document.createElement("img");img.className="imagem-noticia";img.src=n.imagem;img.alt="Imagem ilustrativa: "+n.categoria;img.loading="lazy";img.onerror=()=>img.style.display="none";const cat=document.createElement("p");cat.className="categoria";cat.textContent=n.categoria;const h=document.createElement("h3");h.textContent=n.titulo;const p=document.createElement("p");p.textContent=n.resumo;const a=document.createElement("a");a.href=n.link;a.target="_blank";a.rel="noopener noreferrer";a.textContent="ACESSAR SITE OFICIAL ↗";card.append(img,cat,h,p,a);listaNoticias.appendChild(card);});
+/* NOTÍCIAS AUTOMÁTICAS — conteúdo gerado pelo GitHub Actions em noticias.json */
+(function(){
+ const lista=document.getElementById("lista-noticias");
+ const status=document.getElementById("status-noticias");
+ const botoes=[...document.querySelectorAll(".filtro-noticia")];
+ let noticias=[],filtroAtual="Todas";
+ const noticiasIniciais=[{"categoria": "F1", "fonte": "Formula1.com — site oficial", "titulo": "Últimas notícias da Fórmula 1", "resumo": "Acesse a cobertura oficial para acompanhar notícias, entrevistas, atualizações das equipes e tudo o que acontece no mundo da F1.", "data": "2026-10-18", "link": "https://www.formula1.com/en/latest"}, {"categoria": "F2", "fonte": "FIA Formula 2 — site oficial", "titulo": "Últimas notícias da Fórmula 2", "resumo": "Confira as notícias oficiais da Fórmula 2, incluindo pilotos, equipes, classificação e novidades das etapas.", "data": "2026-10-18", "link": "https://www.fiaformula2.com/en/latest"}, {"categoria": "F1", "fonte": "Formula1.com — site oficial", "titulo": "Calendário e resultados da temporada", "resumo": "Consulte a página oficial da temporada para acompanhar os Grandes Prêmios, resultados e informações atualizadas.", "data": "2026-10-18", "link": "https://www.formula1.com/en/racing/2026"}];
+ const escapeText=(v)=>String(v??"");
+ function dataLegivel(v){
+  if(!v)return "Data não informada";
+  const d=new Date(v);
+  return Number.isNaN(d.getTime())?"Data não informada":d.toLocaleDateString("pt-BR",{day:"2-digit",month:"short",year:"numeric",timeZone:"UTC"});
+ }
+ function renderizar(){
+  lista.replaceChildren();
+  const itens=noticias.filter(n=>filtroAtual==="Todas"||n.categoria===filtroAtual);
+  if(!itens.length){
+   const p=document.createElement("p");p.className="card";p.textContent="Nenhuma notícia disponível para esse filtro no momento.";lista.appendChild(p);return;
+  }
+  itens.forEach(n=>{
+   const card=document.createElement("article");card.className="card";
+   const cat=document.createElement("p");cat.className="categoria";cat.textContent=n.categoria==="F1"?"FÓRMULA 1":"FÓRMULA 2";
+   const meta=document.createElement("p");meta.className="noticia-meta";meta.textContent=n.fonte||"Fonte oficial";
+   const h=document.createElement("h3");h.textContent=escapeText(n.titulo);
+   const p=document.createElement("p");p.textContent=escapeText(n.resumo)||"Consulte a publicação original para ver todos os detalhes.";
+   const data=document.createElement("span");data.className="noticia-data";data.textContent=dataLegivel(n.data);
+   card.append(cat,meta,h,p,data);
+   if(n.link){
+    const a=document.createElement("a");a.className="noticia-fonte";a.href=n.link;a.target="_blank";a.rel="noopener noreferrer";a.textContent="LER NA FONTE ORIGINAL ↗";card.appendChild(a);
+   }
+   lista.appendChild(card);
+  });
+ }
+ botoes.forEach(b=>b.addEventListener("click",()=>{
+  filtroAtual=b.dataset.categoria;
+  botoes.forEach(x=>{const ativo=x===b;x.classList.toggle("ativo",ativo);x.setAttribute("aria-pressed",String(ativo));});
+  renderizar();
+ }));
+ fetch("./noticias.json?atualizado="+Date.now(),{cache:"no-store"})
+  .then(r=>{if(!r.ok)throw new Error("Arquivo de notícias não encontrado");return r.json();})
+  .then(d=>{
+   if(!Array.isArray(d.noticias)||!d.noticias.length)throw new Error("Nenhuma notícia disponível");
+   noticias=d.noticias;
+   status.textContent="Atualizado em "+dataLegivel(d.atualizadoEm)+".";
+   renderizar();
+  })
+  .catch(()=>{
+   noticias=noticiasIniciais;
+   status.textContent="Exibindo links oficiais de notícias. Publique também noticias.json e configure o GitHub Actions para carregar as notícias atualizadas automaticamente.";
+   renderizar();
+  });
+})();
 
 /* CALENDÁRIOS */
 const categorias=[{id:"calendario-f1",nome:"FÓRMULA 1",resumo:"Consulte as etapas, datas, horários e resultados dos Grandes Prêmios.",link:"https://www.formula1.com/en/racing/2026"},{id:"calendario-f2",nome:"FÓRMULA 2",resumo:"Acompanhe as etapas da categoria de acesso à Fórmula 1.",link:"https://www.fiaformula2.com/"},{id:"calendario-f3",nome:"FÓRMULA 3",resumo:"Confira as corridas dos jovens talentos do automobilismo.",link:"https://www.fiaformula3.com/"},{id:"calendario-f1academy",nome:"F1 ACADEMY",resumo:"Descubra as etapas da categoria feminina de automobilismo.",link:"https://www.f1academy.com/Racing-Series/Calendar"}];
