@@ -1,0 +1,29 @@
+PIT STOP 360 — PACOTE COMPLETO DE NOTÍCIAS AUTOMÁTICAS
+
+ESTE ZIP CONTÉM:
+- index.html: site com a seção de notícias e filtros F1/F2.
+- noticias.json: manchetes iniciais para a seção não ficar vazia.
+- scripts/atualizar_noticias.py: script que tenta coletar notícias das páginas oficiais de F1 e F2.
+- .github/workflows/atualizar-noticias.yml: GitHub Actions, agendado a cada seis horas e com execução manual.
+
+ANTES DE COMEÇAR
+1. Não apague seu site original do GitHub. O backup é importante.
+2. Extraia este ZIP em uma pasta nova.
+3. Confira que existem os arquivos e pastas: index.html, noticias.json, scripts/atualizar_noticias.py e .github/workflows/atualizar-noticias.yml.
+
+COMO PUBLICAR PELO NAVEGADOR
+1. Abra https://github.com/Gelado327/pit-stop-360
+2. Faça backup do index.html atual (abra o arquivo e copie o conteúdo para um arquivo local antes de substituir).
+3. Envie/substitua o index.html pela versão deste pacote.
+4. Envie noticias.json para a raiz do repositório.
+5. Crie o arquivo scripts/atualizar_noticias.py no GitHub e cole o conteúdo do arquivo local. Se for enviar pastas/arquivos pelo navegador, mantenha exatamente esse caminho.
+6. Crie .github/workflows/atualizar-noticias.yml e cole o conteúdo correspondente. O caminho começa com ponto: .github/workflows/atualizar-noticias.yml.
+7. Faça commit das alterações.
+8. Abra a aba Actions no GitHub, escolha “Atualizar notícias de F1 e F2” e clique em Run workflow.
+9. Aguarde terminar e confira se ficou verde. Se falhar, abra a execução para ver o erro.
+
+IMPORTANTE
+- O pacote não modifica o GitHub sozinho; você faz cada publicação.
+- A coleta depende das páginas oficiais e seus formatos podem mudar. Se uma fonte falhar, o script tenta preservar as notícias antigas daquela categoria.
+- O site mostra títulos que recebe no JSON. As notícias iniciais são apenas conteúdo de partida; confirme as manchetes e os links depois da primeira execução.
+- O agendamento pode atrasar; não é atualização instantânea.
